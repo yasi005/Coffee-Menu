@@ -18,7 +18,7 @@ export default function CircularReveal({ children, bgColor = "bg-white" }: Circu
       exit={{ clipPath: "circle(0% at 50% 50%)" }}
       // A premium, slightly slow ease-out curve (like Apple animations)
       transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-      className={`w-full min-h-screen ${bgColor}`}
+      className={`w-full ${bgColor}`}
     >
       {children}
     </motion.div>
