@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
 import { LanguageProvider } from "./hooks/LanguageContext";
-import { ThemeProvider } from "./components/providers/ThemeProvider"; // <-- Import it
+import { ThemeProvider } from "./components/providers/ThemeProvider"; 
+import ConditionalLayout from "./components/layout/ConditionalLayout"; // <-- اینو اضافه کردیم
 
 const inter = Inter({ subsets: ["latin", "greek"] });
 
@@ -18,18 +17,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Removed the hardcoded dark classes from body so the provider can handle it dynamically
   return (
     <html lang="el" className="scroll-smooth" suppressHydrationWarning>
       <body className={`${inter.className} bg-background text-foreground antialiased flex flex-col min-h-screen relative overflow-x-hidden transition-colors duration-500`}>
-        {/* Add the ThemeProvider wrapping everything */}
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange={false}>
           <LanguageProvider>
-            <Header />
-            <main className="flex-grow pt-21">
+            
+            <ConditionalLayout>
               {children}
-            </main>
-            <Footer />
+            </ConditionalLayout>
+            
           </LanguageProvider>
         </ThemeProvider>
       </body>
