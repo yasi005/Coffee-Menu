@@ -10,33 +10,45 @@ export default function Footer() {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8 }}
-      className="w-full bg-white dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-900 py-10 mt-auto"
+      className="w-full bg-background border-t border-border/30 py-4 mt-auto transition-colors duration-500 font-sans"
     >
-      <div className="max-w-7xl mx-auto px-6 flex flex-col items-center gap-6 text-center">
-        
-        {/* Contact & Socials */}
-        <div className="flex justify-center gap-4">
-          <a href="#" className="p-3 rounded-full bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-300 hover:text-amber-500 transition-colors">
-            <Phone size={20} />
+      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0">
+
+        {/* Creative & Bolder Copyright */}
+        <div className="text-xs font-semibold tracking-wide text-foreground/80 transition-colors duration-500 flex items-center gap-1.5">
+          <span className="text-[#c4a47c] text-sm">©</span>
+          <span>{new Date().getFullYear()}</span>
+          <span className="text-border mx-1">|</span>
+          <span className="bg-gradient-to-r from-foreground/90 to-foreground/50 bg-clip-text text-transparent">
+            Designed by You
+          </span>
+        </div>
+
+        {/* Raw, Bold & Colorful Icons */}
+        <div className="flex items-center gap-6">
+          <a
+            href="#"
+            aria-label="Phone"
+            className="text-foreground/50 hover:text-[#c4a47c] hover:scale-110 transition-all duration-300 hover:drop-shadow-[0_0_10px_rgba(196,164,124,0.6)]"
+          >
+            <Phone size={18} strokeWidth={2.2} />
           </a>
-          <a href="#" className="p-3 rounded-full bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-300 hover:text-amber-500 transition-colors">
-            <Phone size={20} />
+          <a
+            href="#"
+            aria-label="Instagram"
+            className="text-foreground/50 hover:text-[#c4a47c] hover:scale-110 transition-all duration-300 hover:drop-shadow-[0_0_10px_rgba(196,164,124,0.6)]"
+          >
+            {/* <Instagram size={18} strokeWidth={2.2} /> */}
           </a>
-          <a href="#" className="p-3 rounded-full bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-300 hover:text-amber-500 transition-colors">
-            <MapPin size={20} />
+          <a
+            href="#"
+            aria-label="Location"
+            className="text-foreground/50 hover:text-[#c4a47c] hover:scale-110 transition-all duration-300 hover:drop-shadow-[0_0_10px_rgba(196,164,124,0.6)]"
+          >
+            <MapPin size={18} strokeWidth={2.2} />
           </a>
         </div>
 
-        {/* Address */}
-        <div className="space-y-1 text-sm text-neutral-500 dark:text-neutral-400">
-          <p>Odos Ermou 12, Athens 105 63</p>
-          <p>+30 21 1234 5678</p>
-        </div>
-
-        {/* Copyright */}
-        <div className="text-xs text-neutral-400 dark:text-neutral-500 font-medium">
-          Designed by You • © {new Date().getFullYear()} All Rights Reserved
-        </div>
       </div>
     </motion.footer>
   );

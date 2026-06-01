@@ -8,7 +8,7 @@ export default function ConditionalLayout({ children }: { children: React.ReactN
   const pathname = usePathname();
 
   // لیست آدرس‌هایی که هدر و فوتر نمی‌خوان رو اینجا می‌نویسیم
-  const hideNavRoutes = ["/coffee", "/breakfast", "/quick-order","/drinks"];
+  const hideNavRoutes = ["/coffee", "/breakfast", "/quick-order","/drinks", "/food"];
   
   // چک می‌کنیم آیا آدرس فعلی جزو لیست بالا هست یا نه
   const shouldHideNav = hideNavRoutes.includes(pathname);

@@ -13,6 +13,7 @@ export const dictionaries = {
       Hot: "Hot",
       Juice: "Juice",
       Cold: "Cold",
+      Drinks: "Drinks",
     },
     footer: {
       address: "Odos Ermou 12, Athens 105 63",
@@ -32,6 +33,7 @@ export const dictionaries = {
       Hot: "Ζεστό",
       Juice: "Χυμός",
       Cold: "Κρύο",
+      Drinks: "Ποτά",
     },
     footer: {
       address: "Οδός Ερμού 12, Αθήνα 105 63",

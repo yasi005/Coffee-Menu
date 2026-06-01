@@ -1,114 +1,202 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { CloudSun, Calendar, Plus } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useLanguage } from "./hooks/LanguageContext";
-import LiveWeatherTime from "./components/ui/LiveWatherTime";
+import Image from "next/image";
+import { useRef } from "react";
+import { MapPin, Clock } from "lucide-react";
 
-export default function Home() {
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-50px" },
+  transition: { duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] },
+});
+
+const HERO_IMAGE_URL = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1400&q=80";
+const EXP_IMAGE_URL = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80";
+
+export default function HomePage() {
   const { lang } = useLanguage();
+  const heroRef = useRef<HTMLDivElement>(null);
 
-  // Temporary mock data to show how the "Full Menu" will look.
-  // We will replace this with your real menuData.ts file next!
-  const menuCategories = [
-    {
-      titleEn: "Signature Coffee",
-      titleEl: "Καφές Signature",
-      items: [
-        { id: 1, name: "Aged Espresso", price: "4.50", descEn: "Double shot, 12-day barrel aged", descEl: "Διπλή δόση, παλαιωμένος 12 μέρες" },
-        { id: 2, name: "Velvet Flat White", price: "5.00", descEn: "Oat milk, vanilla bean dust", descEl: "Γάλα βρώμης, πούδρα βανίλιας" },
-      ]
-    },
-    {
-      titleEn: "Cold Pressed Juices",
-      titleEl: "Φυσικοί Χυμοί",
-      items: [
-        { id: 3, name: "Green Detox", price: "6.50", descEn: "Celery, green apple, ginger, lime", descEl: "Σέλινο, πράσινο μήλο, τζίντζερ, λάιμ" },
-        { id: 4, name: "Sunset Glow", price: "6.00", descEn: "Carrot, orange, turmeric", descEl: "Καρότο, πορτοκάλι, κουρκουμάς" },
-      ]
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+
+  const imgScale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+  const imgOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.1]);
+  const titleY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+
+  const t = (en: string, el: string) => (lang === "el" ? el : en);
+
+  const openHeaderMenu = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    const menuBtn = document.querySelector('button[aria-label="Open Menu"]') as HTMLButtonElement;
+    if (menuBtn) {
+      menuBtn.click();
     }
-  ];
+  };
 
   return (
-    // px-6 and md:px-12 ensures the content NEVER touches the screen edges
-    <div className="w-full max-w-5xl mx-auto px-6 md:px-12 flex flex-col gap-16 pb-32">
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;700&display=swap');
+      `}</style>
 
-      {/* 1. WELCOME HERO SECTION */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col gap-6 mt-16 md:mt-24"
-      >
+      <main className="w-full bg-background text-foreground transition-colors duration-500 overflow-hidden font-sans">
 
-        {/* --- THE NEW LIVE SYNC BADGE --- */}
-        <LiveWeatherTime />
+        {/* ─── 1. HERO SECTION ─── */}
+        <section ref={heroRef} className="relative w-full h-[85svh] overflow-hidden flex items-center justify-center">
+          <motion.div style={{ scale: imgScale, opacity: imgOpacity }} className="absolute inset-0 w-full h-full z-0">
+            <Image src={HERO_IMAGE_URL} alt="The Lab interior" fill className="object-cover" priority sizes="100vw" />
+          </motion.div>
 
-        {/* The Massive Minimalist Title */}
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] text-foreground">
-          {lang === "el" ? (
-            <>Απλά. <br /><span className="text-muted-foreground/50">Εξαιρετικά.</span></>
-          ) : (
-            <>Simply. <br /><span className="text-muted-foreground/50">Exceptional.</span></>
-          )}
-        </h1>
-      </motion.section>
+          {/* تغییر مهم: گرادیان فقط در دارک‌مود وجود داره، در لایت‌مود کاملاً محو میشه تا عکس واضح باشه */}
+          <div className="absolute inset-0 dark:bg-gradient-to-b dark:from-background/10 dark:via-background/40 dark:to-background z-0 transition-colors duration-500" />
 
-      {/* 2. THE FULL MENU SECTION */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 0.3 }}
-        className="flex flex-col gap-16"
-      >
-        {menuCategories.map((category, catIndex) => (
-          <div key={catIndex} className="flex flex-col gap-8">
+          <div className="relative z-10 flex flex-col items-center text-center px-6 mt-10">
+            <motion.p
+              {...fadeUp(0.1)}
+              className="text-[10px] tracking-[0.4em] uppercase text-[#c4a47c] mb-3 font-bold"
+            >
+              {t("Athens · Est. 2018", "Αθήνα · Est. 2018")}
+            </motion.p>
 
-            {/* Category Header */}
-            <div className="flex items-end justify-between border-b border-border/40 pb-4">
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                {lang === "el" ? category.titleEl : category.titleEn}
-              </h2>
-            </div>
+            <motion.h1
+              {...fadeUp(0.2)}
+              className="text-[#3a3530] dark:text-white leading-[0.95] mb-4 font-serif"
+              style={{ 
+                y: titleY, 
+                fontSize: "clamp(60px, 14vw, 100px)", 
+                fontWeight: 400, 
+                letterSpacing: "-0.02em" 
+              }}
+            >
+              {t("Simply.", "Απλά.")}
+              <br />
+              <span className="italic text-[#6b6258] dark:text-white/70">{t("Exceptional.", "Εξαιρετικά.")}</span>
+            </motion.h1>
 
-            {/* Menu Items Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {category.items.map((item, itemIndex) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5, delay: itemIndex * 0.1 }}
-                  className="group flex items-center justify-between p-4 rounded-3xl bg-muted/10 border border-border/30 hover:border-foreground/20 hover:bg-muted/30 transition-all cursor-pointer"
-                >
-                  {/* Item Details */}
-                  <div className="flex flex-col gap-1 pr-4">
-                    <h3 className="text-lg font-bold tracking-tight text-foreground">
-                      {item.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
-                      {lang === "el" ? item.descEl : item.descEn}
+            <motion.p
+              {...fadeUp(0.3)}
+              className="text-[#6b6258] dark:text-white/70 max-w-sm text-sm font-light leading-relaxed mb-8"
+            >
+              {t("A curated space for specialty coffee, honest food, and long evenings.", "Ένας προσεγμένος χώρος για specialty καφέ, αληθινό φαγητό και μεγάλα βράδια.")}
+            </motion.p>
+
+            <motion.div {...fadeUp(0.4)}>
+              <a
+                href="#about"
+                className="inline-flex items-center justify-center w-12 h-12 rounded-full border border-[#c4a47c] text-[#c4a47c] hover:bg-[#c4a47c] hover:text-white transition-all shadow-[0_0_20px_rgba(196,164,124,0.3)] dark:shadow-[0_0_20px_rgba(196,164,124,0.45)]"
+              >
+                ↓
+              </a>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ─── 2. ABOUT & EXPERIENCE ─── */}
+        <section id="about" className="relative w-full py-24 flex items-center justify-center text-center transition-colors duration-500">
+          <div
+            className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat bg-fixed"
+            style={{ backgroundImage: `url(${EXP_IMAGE_URL})` }}
+          />
+          {/* تغییر مهم: روکش سفید در لایت‌مود خیلی کمتر شد و به جاش یه بلور ریز گرفت تا عکس واضح‌تر باشه و دارک‌مود همون موند */}
+          <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px] dark:backdrop-blur-none dark:bg-background/75 z-0 transition-all duration-500" />
+
+          <div className="relative z-10 px-6 max-w-2xl mx-auto flex flex-col items-center">
+            <motion.span {...fadeUp(0.1)} className="text-[10px] font-black tracking-[0.3em] uppercase text-[#c4a47c] mb-3 drop-shadow-sm dark:drop-shadow-none">
+              {t("The Experience", "Η Εμπειρία")}
+            </motion.span>
+            <motion.h2 {...fadeUp(0.2)} className="text-3xl md:text-4xl font-serif font-light mb-5 text-[#1a1815] dark:text-foreground leading-tight drop-shadow-sm dark:drop-shadow-none">
+              {t("More than just a destination.", "Κάτι περισσότερο από ένας προορισμός.")}
+            </motion.h2>
+            <motion.p {...fadeUp(0.3)} className="text-[#3a3530] dark:text-muted-foreground font-light leading-relaxed text-sm md:text-base drop-shadow-sm dark:drop-shadow-none">
+              {t(
+                "We believe that every detail matters. From the ethically sourced beans we roast each morning to the handcrafted cocktails we shake at night. Our space is designed to be your sanctuary.",
+                "Πιστεύουμε ότι κάθε λεπτομέρεια μετράει. Από τους προσεκτικά επιλεγμένους κόκκους, μέχρι τα κοκτέιλ που ετοιμάζουμε το βράδυ. Ο χώρος μας έχει σχεδιαστεί για να είναι το καταφύγιό σας."
+              )}
+            </motion.p>
+          </div>
+        </section>
+
+        {/* ─── 3. MENU TRIGGER CTA ─── */}
+        <section className="w-full py-16 bg-background border-b border-border transition-colors duration-500">
+          <div className="max-w-xl mx-auto px-6 text-center flex flex-col items-center">
+            <motion.h2 {...fadeUp(0.1)} className="text-3xl font-serif text-foreground mb-3">
+              {t("Discover Our Taste", "Ανακαλύψτε τη Γεύση μας")}
+            </motion.h2>
+            <motion.p {...fadeUp(0.2)} className="text-sm text-muted-foreground mb-8">
+              {t("Explore our hand-crafted selections of coffee, food, and signature drinks.", "Εξερευνήστε τις χειροποίητες επιλογές μας από καφέ, φαγητό και ποτά.")}
+            </motion.p>
+
+            <motion.button
+              {...fadeUp(0.3)}
+              onClick={openHeaderMenu}
+              className="px-8 py-3 rounded-full bg-[#c4a47c] text-white text-sm font-bold tracking-wider uppercase hover:bg-[#a88a65] hover:shadow-[0_0_20px_rgba(196,164,124,0.4)] transition-all"
+            >
+              {t("Check the Menu", "Δείτε το Μενού")}
+            </motion.button>
+          </div>
+        </section>
+
+        {/* ─── 4. COMPACT LOCATION & MAP ─── */}
+        <section className="w-full py-16 px-6 max-w-5xl mx-auto">
+          <div className="flex flex-col md:flex-row gap-8 bg-card p-6 rounded-[32px] shadow-sm border border-border transition-colors duration-500">
+
+            <motion.div {...fadeUp(0.1)} className="flex-1 flex flex-col justify-center">
+              <span className="text-[10px] font-black tracking-[0.3em] uppercase text-[#c4a47c] mb-2">
+                {t("Visit Us", "Επισκεφθείτε μας")}
+              </span>
+              <h2 className="text-2xl font-serif text-foreground mb-6">The Lab Athens</h2>
+
+              <div className="space-y-5">
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 text-[#c4a47c]"><MapPin size={18} /></div>
+                  <div>
+                    <h4 className="text-xs font-bold text-foreground uppercase tracking-wider mb-1">
+                      {t("Location", "Τοποθεσία")}
+                    </h4>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      National Technical University Area<br />
+                      Athens, Greece 106 82
                     </p>
                   </div>
+                </div>
 
-                  {/* Price & Add Button */}
-                  <div className="flex flex-col items-end gap-3 pl-4 border-l border-border/40 shrink-0">
-                    <span className="text-lg font-black tracking-tighter text-foreground">
-                      €{item.price}
-                    </span>
-                    <button className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center text-foreground group-hover:bg-foreground group-hover:text-background transition-colors">
-                      <Plus size={16} strokeWidth={2} />
-                    </button>
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 text-[#c4a47c]"><Clock size={18} /></div>
+                  <div>
+                    <h4 className="text-xs font-bold text-foreground uppercase tracking-wider mb-1">
+                      {t("Hours", "Ωράριο")}
+                    </h4>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {t("Mon - Thu: 07:00 - 00:00", "Δευ - Πεμ: 07:00 - 00:00")}<br />
+                      {t("Fri - Sun: 07:00 - 02:00", "Παρ - Κυρ: 07:00 - 02:00")}
+                    </p>
                   </div>
-                </motion.div>
-              ))}
-            </div>
+                </div>
+              </div>
+            </motion.div>
 
+            <motion.div {...fadeUp(0.2)} className="flex-1 h-[250px] md:h-auto rounded-[20px] overflow-hidden relative grayscale hover:grayscale-0 transition-all duration-500">
+              <iframe
+                src="https://maps.google.com/maps?q=National%20Technical%20University%20of%20Athens&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="absolute inset-0"
+              />
+            </motion.div>
           </div>
-        ))}
-      </motion.section>
+        </section>
 
-    </div>
+      </main>
+    </>
   );
 }
