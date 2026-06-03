@@ -35,7 +35,7 @@ export default function Header() {
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
           scrolled 
             ? "bg-muted/80 backdrop-blur-2xl py-4 shadow-sm" 
-            : "bg-muted/40 backdrop-blur-md py-6"
+            : "bg-muted/80 backdrop-blur-2xl py-4"
         }`}
       >
         {/* The Creative Gradient Border */}

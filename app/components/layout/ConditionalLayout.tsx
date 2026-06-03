@@ -18,7 +18,7 @@ export default function ConditionalLayout({ children }: { children: React.ReactN
       {!shouldHideNav && <Header />}
       
       {/* اگه هدر داشتیم پدینگ بالا می‌دیم، اگه نه که هیچی */}
-      <main className={`flex-grow ${!shouldHideNav ? "pt-21" : ""}`}>
+      <main className={`flex-grow ${!shouldHideNav ? "pt-15" : ""}`}>
         {children}
       </main>
       
